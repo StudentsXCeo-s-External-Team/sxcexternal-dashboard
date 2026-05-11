@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from("events")
       .select("*", { count: "exact" })
+      .eq("is_published", true)
       .order("start_date", { ascending: false })
       .range(offset, offset + limit - 1);
 

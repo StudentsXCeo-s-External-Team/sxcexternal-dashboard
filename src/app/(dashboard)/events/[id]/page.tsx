@@ -34,6 +34,7 @@ export default function EditEventPage() {
     start_date: "",
     end_date: "",
     location: "",
+    registration_url: "",
     is_published: true,
   });
 
@@ -48,10 +49,11 @@ export default function EditEventPage() {
           start_date: toLocal(data.start_date),
           end_date: toLocal(data.end_date),
           location: data.location ?? "",
+          registration_url: data.registration_url ?? "",
           is_published: data.is_published,
         });
       })
-      .catch(() => setError("Event not found"))
+      .catch((err) => setError(err instanceof ApiError ? err.message : "Failed to load event"))
       .finally(() => setFetching(false));
   }, [id]);
 
@@ -71,6 +73,7 @@ export default function EditEventPage() {
         image_url: form.image_url || null,
         end_date: form.end_date ? new Date(form.end_date).toISOString() : null,
         location: form.location || null,
+        registration_url: form.registration_url || null,
         start_date: new Date(form.start_date).toISOString(),
       });
       router.push("/events");
@@ -138,6 +141,12 @@ export default function EditEventPage() {
         <div>
           <label className={LABEL}>Location</label>
           <input value={form.location} onChange={(e) => set("location", e.target.value)} className={INPUT} />
+        </div>
+
+        <div>
+          <label className={LABEL}>Registration URL</label>
+          <input type="url" value={form.registration_url} onChange={(e) => set("registration_url", e.target.value)} placeholder="https://..." className={INPUT} />
+          <p className="text-xs text-slate-400 mt-1">Link for attendees to register (optional)</p>
         </div>
 
         <div className="flex items-center gap-3">

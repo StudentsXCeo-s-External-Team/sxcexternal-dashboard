@@ -7,9 +7,11 @@ import { ok, badRequest, notFound, serverError } from "@/lib/response";
 const updateSchema = z.object({
   name: z.string().min(1).optional(),
   position: z.string().optional().nullable(),
+  department: z.string().optional().nullable(),
   photo_url: z.string().url("Invalid photo URL").optional().nullable(),
   period: z.string().optional().nullable(),
   bio: z.string().optional().nullable(),
+  social_url: z.string().url("Invalid social URL").optional().nullable(),
   sort_order: z.number().int().optional(),
 });
 

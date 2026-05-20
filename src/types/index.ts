@@ -6,6 +6,7 @@ export interface Event {
   start_date: string;
   end_date: string | null;
   location: string | null;
+  registration_url: string | null;
   is_published: boolean;
   created_at: string;
   updated_at: string;
@@ -18,6 +19,7 @@ export interface News {
   image_url: string | null;
   author: string | null;
   slug: string;
+  images: string[];
   is_published: boolean;
   published_at: string | null;
   created_at: string;
@@ -39,9 +41,11 @@ export interface Member {
   id: string;
   name: string;
   position: string | null;
+  department: string | null;
   photo_url: string | null;
   period: string | null;
   bio: string | null;
+  social_url: string | null;
   sort_order: number;
   created_at: string;
   updated_at: string;

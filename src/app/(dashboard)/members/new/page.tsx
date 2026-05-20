@@ -18,9 +18,11 @@ export default function NewMemberPage() {
   const [form, setForm] = useState({
     name: "",
     position: "",
+    department: "",
     photo_url: "",
     period: "",
     bio: "",
+    social_url: "",
     sort_order: 0,
   });
 
@@ -37,9 +39,11 @@ export default function NewMemberPage() {
       await api.post("/members", {
         ...form,
         position: form.position || null,
+        department: form.department || null,
         photo_url: form.photo_url || null,
         period: form.period || null,
         bio: form.bio || null,
+        social_url: form.social_url || null,
       });
       router.push("/members");
     } catch (err) {
@@ -68,6 +72,11 @@ export default function NewMemberPage() {
         </div>
 
         <div>
+          <label className={LABEL}>Department / Division</label>
+          <input value={form.department} onChange={(e) => set("department", e.target.value)} placeholder="e.g. Data & Technology, Human Resources" className={INPUT} />
+        </div>
+
+        <div>
           <label className={LABEL}>Period / Year</label>
           <input value={form.period} onChange={(e) => set("period", e.target.value)} placeholder="e.g. 2024/2025" className={INPUT} />
         </div>
@@ -80,6 +89,11 @@ export default function NewMemberPage() {
         <div>
           <label className={LABEL}>Bio</label>
           <textarea rows={3} value={form.bio} onChange={(e) => set("bio", e.target.value)} placeholder="Short bio..." className={`${INPUT} resize-none`} />
+        </div>
+
+        <div>
+          <label className={LABEL}>Social / LinkedIn URL</label>
+          <input type="url" value={form.social_url} onChange={(e) => set("social_url", e.target.value)} placeholder="https://linkedin.com/in/..." className={INPUT} />
         </div>
 
         <div>

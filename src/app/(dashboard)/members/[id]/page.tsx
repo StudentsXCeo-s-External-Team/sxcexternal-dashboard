@@ -25,9 +25,11 @@ export default function EditMemberPage() {
   const [form, setForm] = useState({
     name: "",
     position: "",
+    department: "",
     photo_url: "",
     period: "",
     bio: "",
+    social_url: "",
     sort_order: 0,
   });
 
@@ -38,9 +40,11 @@ export default function EditMemberPage() {
         setForm({
           name: data.name,
           position: data.position ?? "",
+          department: data.department ?? "",
           photo_url: data.photo_url ?? "",
           period: data.period ?? "",
           bio: data.bio ?? "",
+          social_url: data.social_url ?? "",
           sort_order: data.sort_order,
         });
       })
@@ -61,9 +65,11 @@ export default function EditMemberPage() {
       await api.put(`/members/${id}`, {
         ...form,
         position: form.position || null,
+        department: form.department || null,
         photo_url: form.photo_url || null,
         period: form.period || null,
         bio: form.bio || null,
+        social_url: form.social_url || null,
       });
       router.push("/members");
     } catch (err) {
@@ -112,6 +118,11 @@ export default function EditMemberPage() {
         </div>
 
         <div>
+          <label className={LABEL}>Department / Division</label>
+          <input value={form.department} onChange={(e) => set("department", e.target.value)} placeholder="e.g. Data & Technology, Human Resources" className={INPUT} />
+        </div>
+
+        <div>
           <label className={LABEL}>Period / Year</label>
           <input value={form.period} onChange={(e) => set("period", e.target.value)} placeholder="e.g. 2024/2025" className={INPUT} />
         </div>
@@ -124,6 +135,11 @@ export default function EditMemberPage() {
         <div>
           <label className={LABEL}>Bio</label>
           <textarea rows={3} value={form.bio} onChange={(e) => set("bio", e.target.value)} className={`${INPUT} resize-none`} />
+        </div>
+
+        <div>
+          <label className={LABEL}>Social / LinkedIn URL</label>
+          <input type="url" value={form.social_url} onChange={(e) => set("social_url", e.target.value)} placeholder="https://linkedin.com/in/..." className={INPUT} />
         </div>
 
         <div>

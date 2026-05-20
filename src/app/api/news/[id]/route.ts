@@ -10,6 +10,7 @@ const updateNewsSchema = z.object({
   image_url: z.string().url().optional().nullable(),
   author: z.string().optional().nullable(),
   slug: z.string().optional(),
+  images: z.array(z.string().url()).optional(),
   is_published: z.boolean().optional(),
   published_at: z.string().datetime().optional().nullable(),
 });

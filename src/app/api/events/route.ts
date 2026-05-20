@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import { supabase } from "@/lib/supabase";
 import { withAuth } from "@/lib/withAuth";
+import { getServerAdmin } from "@/lib/server-auth";
 import { ok, created, badRequest, serverError } from "@/lib/response";
 import { parsePagination } from "@/lib/utils";
 
@@ -12,6 +13,7 @@ const createEventSchema = z.object({
   start_date: z.string().datetime("Invalid start_date format"),
   end_date: z.string().datetime("Invalid end_date format").optional().nullable(),
   location: z.string().optional().nullable(),
+  registration_url: z.string().url("Invalid registration URL").optional().nullable(),
   is_published: z.boolean().default(true),
 });
 
@@ -21,12 +23,18 @@ export async function GET(request: NextRequest) {
     const { page, limit, offset } = parsePagination(searchParams);
     const search = searchParams.get("search") ?? "";
 
+    // Authenticated admins see all events; public only sees published
+    const admin = await getServerAdmin();
+
     let query = supabase
       .from("events")
       .select("*", { count: "exact" })
-      .eq("is_published", true)
       .order("start_date", { ascending: false })
       .range(offset, offset + limit - 1);
+
+    if (!admin) {
+      query = query.eq("is_published", true);
+    }
 
     if (search) {
       query = query.ilike("title", `%${search}%`);

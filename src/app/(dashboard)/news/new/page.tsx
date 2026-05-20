@@ -23,6 +23,7 @@ export default function NewNewsPage() {
     image_url: "",
     author: "",
     slug: "",
+    images: [] as string[],
     is_published: true,
   });
 
@@ -46,6 +47,7 @@ export default function NewNewsPage() {
         ...form,
         image_url: form.image_url || null,
         author: form.author || null,
+        images: form.images,
       });
       router.push("/news");
     } catch (err) {
@@ -90,6 +92,42 @@ export default function NewNewsPage() {
         <div>
           <label className={LABEL}>Cover Image</label>
           <ImageUpload value={form.image_url} onChange={(url) => set("image_url", url)} folder="news" />
+        </div>
+
+        <div>
+          <label className={LABEL}>
+            Gallery Images
+            <span className="text-xs text-slate-400 font-normal ml-2">(shown below article content)</span>
+          </label>
+          <div className="space-y-3">
+            {form.images.map((url, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <ImageUpload
+                  value={url}
+                  onChange={(newUrl) => {
+                    const updated = [...form.images];
+                    updated[i] = newUrl;
+                    set("images", updated);
+                  }}
+                  folder="news"
+                />
+                <button
+                  type="button"
+                  onClick={() => set("images", form.images.filter((_, j) => j !== i))}
+                  className="shrink-0 px-2 py-1 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => set("images", [...form.images, ""])}
+              className="px-3 py-2 text-sm text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors"
+            >
+              + Add Image
+            </button>
+          </div>
         </div>
 
         <div>

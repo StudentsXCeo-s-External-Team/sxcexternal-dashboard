@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 import { supabase } from "@/lib/supabase";
 import { withAuth } from "@/lib/withAuth";
+import { getServerAdmin } from "@/lib/server-auth";
 import { ok, created, badRequest, conflict, serverError } from "@/lib/response";
 import { generateSlug, parsePagination } from "@/lib/utils";
 
@@ -11,6 +12,7 @@ const createNewsSchema = z.object({
   image_url: z.string().url("Invalid image URL").optional().nullable(),
   author: z.string().optional().nullable(),
   slug: z.string().optional(),
+  images: z.array(z.string().url()).optional().default([]),
   is_published: z.boolean().default(true),
   published_at: z.string().datetime().optional().nullable(),
 });
@@ -22,12 +24,18 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search") ?? "";
     const slug = searchParams.get("slug") ?? "";
 
+    // Authenticated admins see all news; public only sees published
+    const admin = await getServerAdmin();
+
     let query = supabase
       .from("news")
       .select("*", { count: "exact" })
-      .eq("is_published", true)
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
+
+    if (!admin) {
+      query = query.eq("is_published", true);
+    }
 
     if (slug) {
       query = query.eq("slug", slug);

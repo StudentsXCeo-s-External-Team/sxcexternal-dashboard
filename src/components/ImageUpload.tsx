@@ -41,8 +41,8 @@ export default function ImageUpload({
         onClick={() => !uploading && inputRef.current?.click()}
         className={`border-2 border-dashed rounded-md p-5 text-center transition-colors ${
           uploading
-            ? "border-zinc-200 cursor-not-allowed"
-            : "border-zinc-200 hover:border-sxc-blue cursor-pointer"
+            ? "border-zinc-200 dark:border-zinc-700 cursor-not-allowed"
+            : "border-zinc-200 dark:border-zinc-700 hover:border-sxc-blue cursor-pointer"
         }`}
       >
         {value ? (
@@ -72,7 +72,7 @@ export default function ImageUpload({
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
               {uploading ? "Uploading..." : "Click to upload image"}
             </p>
             <p className="text-xs text-zinc-400 mt-1">

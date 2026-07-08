@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -13,9 +13,9 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 const TYPE_COLORS: Record<string, string> = {
-  corporate: "bg-blue-100 text-blue-700",
-  media: "bg-green-100 text-green-700",
-  community: "bg-orange-100 text-orange-700",
+  corporate: "bg-sxc-navy text-white",
+  media: "bg-sxc-blue text-white",
+  community: "bg-zinc-200 text-zinc-700",
 };
 
 export default function PartnersPage() {
@@ -68,20 +68,20 @@ export default function PartnersPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Partners</h1>
-          <p className="text-sm text-slate-500">{pagination ? `${pagination.total} partners found` : ""}</p>
+          <h1 className="text-xl font-bold text-zinc-900">Partners</h1>
+          <p className="text-sm text-zinc-500">{pagination ? `${pagination.total} partners found` : ""}</p>
         </div>
-        <Link href="/partners/new" className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+        <Link href="/partners/new" className="px-4 py-2 bg-sxc-navy text-white text-sm font-medium rounded-md hover:bg-sxc-blue transition-colors">
           + Add Partner
         </Link>
       </div>
 
       <div className="flex gap-2 flex-wrap">
         <form onSubmit={handleSearch} className="flex gap-2 flex-1 min-w-48">
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search partners..." className="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-          <button type="submit" className="px-4 py-2 bg-slate-800 text-white text-sm rounded-lg hover:bg-slate-700 transition-colors">Search</button>
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search partners..." className="flex-1 px-3 py-2 text-sm border border-zinc-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sxc-blue" />
+          <button type="submit" className="px-4 py-2 bg-zinc-800 text-white text-sm rounded-md hover:bg-zinc-700 transition-colors">Search</button>
         </form>
-        <select value={filterType} onChange={(e) => { setFilterType(e.target.value); setPage(1); }} className="px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <select value={filterType} onChange={(e) => { setFilterType(e.target.value); setPage(1); }} className="px-3 py-2 text-sm border border-zinc-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sxc-blue">
           <option value="">All Types</option>
           <option value="corporate">Corporate</option>
           <option value="media">Media</option>
@@ -89,43 +89,43 @@ export default function PartnersPage() {
         </select>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-md border border-zinc-200 overflow-hidden">
         {loading ? (
-          <div className="py-16 text-center text-slate-400 text-sm">Loading...</div>
+          <div className="py-16 text-center text-zinc-400 text-sm">Loading...</div>
         ) : partners.length === 0 ? (
-          <div className="py-16 text-center text-slate-400 text-sm">
+          <div className="py-16 text-center text-zinc-400 text-sm">
             No partners yet.{" "}
-            <Link href="/partners/new" className="text-indigo-600 hover:underline">Add one now</Link>
+            <Link href="/partners/new" className="text-sxc-navy hover:underline">Add one now</Link>
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-zinc-50 border-b border-zinc-200">
               <tr>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Partner</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Type</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Order</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-zinc-500 uppercase tracking-wide">Partner</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-zinc-500 uppercase tracking-wide">Type</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-zinc-500 uppercase tracking-wide">Order</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-zinc-100">
               {partners.map((partner) => (
-                <tr key={partner.id} className="hover:bg-slate-50 transition-colors">
+                <tr key={partner.id} className="hover:bg-zinc-50 transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={partner.logo_url} alt={partner.name} className="w-10 h-10 object-contain rounded border border-slate-100 bg-white p-1 shrink-0" />
-                      <span className="font-medium text-slate-800">{partner.name}</span>
+                      <img src={partner.logo_url} alt={partner.name} className="w-10 h-10 object-contain rounded border border-zinc-100 bg-white p-1 shrink-0" />
+                      <span className="font-medium text-zinc-800">{partner.name}</span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${TYPE_COLORS[partner.partner_type] ?? "bg-slate-100 text-slate-500"}`}>
+                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${TYPE_COLORS[partner.partner_type] ?? "bg-zinc-100 text-zinc-500"}`}>
                       {TYPE_LABELS[partner.partner_type] ?? partner.partner_type}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-500">{partner.sort_order}</td>
+                  <td className="px-4 py-3 text-zinc-500">{partner.sort_order}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2 justify-end">
-                      <Link href={`/partners/${partner.id}`} className="text-indigo-600 hover:underline text-xs font-medium">Edit</Link>
+                      <Link href={`/partners/${partner.id}`} className="text-sxc-navy hover:underline text-xs font-medium">Edit</Link>
                       <button onClick={() => setDeleteTarget(partner)} className="text-red-500 hover:underline text-xs font-medium">Delete</button>
                     </div>
                   </td>
@@ -138,10 +138,10 @@ export default function PartnersPage() {
 
       {pagination && pagination.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">
-          <span className="text-slate-500">Page {pagination.page} of {pagination.totalPages}</span>
+          <span className="text-zinc-500">Page {pagination.page} of {pagination.totalPages}</span>
           <div className="flex gap-2">
-            <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="px-3 py-1.5 border border-slate-200 rounded-lg disabled:opacity-40 hover:bg-slate-50 transition-colors">← Prev</button>
-            <button disabled={page >= pagination.totalPages} onClick={() => setPage((p) => p + 1)} className="px-3 py-1.5 border border-slate-200 rounded-lg disabled:opacity-40 hover:bg-slate-50 transition-colors">Next →</button>
+            <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="px-3 py-1.5 border border-zinc-200 rounded-md disabled:opacity-40 hover:bg-zinc-50 transition-colors">← Prev</button>
+            <button disabled={page >= pagination.totalPages} onClick={() => setPage((p) => p + 1)} className="px-3 py-1.5 border border-zinc-200 rounded-md disabled:opacity-40 hover:bg-zinc-50 transition-colors">Next →</button>
           </div>
         </div>
       )}
@@ -150,3 +150,4 @@ export default function PartnersPage() {
     </div>
   );
 }
+

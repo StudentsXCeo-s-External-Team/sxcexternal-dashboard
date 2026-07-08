@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { api, ApiError } from "@/lib/api-client";
@@ -39,10 +39,10 @@ export default function ImageUpload({
     <div className="space-y-2">
       <div
         onClick={() => !uploading && inputRef.current?.click()}
-        className={`border-2 border-dashed rounded-xl p-5 text-center transition-colors ${
+        className={`border-2 border-dashed rounded-md p-5 text-center transition-colors ${
           uploading
-            ? "border-slate-200 cursor-not-allowed"
-            : "border-slate-200 hover:border-indigo-400 cursor-pointer"
+            ? "border-zinc-200 cursor-not-allowed"
+            : "border-zinc-200 hover:border-sxc-blue cursor-pointer"
         }`}
       >
         {value ? (
@@ -51,16 +51,16 @@ export default function ImageUpload({
             <img
               src={value}
               alt="Preview"
-              className="max-h-40 mx-auto rounded-lg object-cover"
+              className="max-h-40 mx-auto rounded-md object-cover"
             />
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-zinc-400">
               {uploading ? "Uploading..." : "Click to replace image"}
             </p>
           </div>
         ) : (
           <div className="py-4">
             <svg
-              className="w-10 h-10 text-slate-300 mx-auto mb-2"
+              className="w-10 h-10 text-zinc-300 mx-auto mb-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -72,10 +72,10 @@ export default function ImageUpload({
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-zinc-500">
               {uploading ? "Uploading..." : "Click to upload image"}
             </p>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-zinc-400 mt-1">
               JPEG, PNG, WebP, GIF — max 5MB
             </p>
           </div>
@@ -95,3 +95,4 @@ export default function ImageUpload({
     </div>
   );
 }
+

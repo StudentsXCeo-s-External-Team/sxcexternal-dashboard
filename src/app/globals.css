@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+
 * {
   box-sizing: border-box;
+}
+
+:root {
+  --font-sans:    "Inter", system-ui, sans-serif;
+  --font-display: "Inter", system-ui, sans-serif;
+
+  --color-sxc-navy:          #07224F;
+  --color-sxc-blue:          #2061E3;
+  --color-sxc-skyblue:       #00ADF1;
+  --color-sxc-skyblue-light: #8ECAE6;
+  --color-sxc-yellow:        #F4CC0A;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

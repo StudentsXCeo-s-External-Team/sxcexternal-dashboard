@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ export default function DeleteModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4">
+      <div className="bg-white rounded-md shadow-xl p-6 w-full max-w-sm mx-4">
         <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mx-auto mb-4">
           <svg
             className="w-6 h-6 text-red-600"
@@ -36,10 +36,10 @@ export default function DeleteModal({
           </svg>
         </div>
 
-        <h3 className="text-base font-semibold text-slate-800 text-center mb-1">
+        <h3 className="text-base font-semibold text-zinc-800 text-center mb-1">
           Delete this item?
         </h3>
-        <p className="text-sm text-slate-500 text-center mb-6">
+        <p className="text-sm text-zinc-500 text-center mb-6">
           &quot;{itemName}&quot; will be permanently deleted and cannot be
           recovered.
         </p>
@@ -48,14 +48,14 @@ export default function DeleteModal({
           <button
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2 text-sm font-medium text-zinc-600 bg-zinc-100 rounded-md hover:bg-zinc-200 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={loading}
-            className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50"
           >
             {loading ? "Deleting..." : "Delete"}
           </button>
@@ -64,3 +64,4 @@ export default function DeleteModal({
     </div>
   );
 }
+

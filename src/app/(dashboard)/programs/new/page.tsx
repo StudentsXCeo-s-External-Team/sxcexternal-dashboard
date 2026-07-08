@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -8,8 +8,8 @@ import ImageUpload from "@/components/ImageUpload";
 import { generateSlug } from "@/lib/utils";
 
 const INPUT =
-  "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500";
-const LABEL = "block text-sm font-medium text-slate-700 mb-1.5";
+  "w-full px-3 py-2.5 text-sm border border-zinc-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sxc-blue";
+const LABEL = "block text-sm font-medium text-zinc-700 mb-1.5";
 
 export default function NewProgramPage() {
   const router = useRouter();
@@ -74,18 +74,18 @@ export default function NewProgramPage() {
   return (
     <div className="max-w-2xl space-y-4">
       <div className="flex items-center gap-3">
-        <Link href="/programs" className="text-slate-400 hover:text-slate-600 transition-colors">← Back</Link>
-        <h1 className="text-xl font-bold text-slate-900">Add Program</h1>
+        <Link href="/programs" className="text-zinc-400 hover:text-zinc-600 transition-colors">← Back</Link>
+        <h1 className="text-xl font-bold text-zinc-900">Add Program</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-slate-200 p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="bg-white rounded-md border border-zinc-200 p-6 space-y-5">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className={LABEL}>Badge Name <span className="text-red-500">*</span></label>
             <input required value={form.badge} onChange={(e) => set("badge", e.target.value)} placeholder="e.g. School of Ideas" className={INPUT} />
           </div>
           <div>
-            <label className={LABEL}>Slug <span className="text-xs text-slate-400 font-normal">(auto)</span></label>
+            <label className={LABEL}>Slug <span className="text-xs text-zinc-400 font-normal">(auto)</span></label>
             <input required value={form.slug} onChange={(e) => { setSlugTouched(true); set("slug", e.target.value); }} placeholder="school-of-ideas" className={INPUT} />
           </div>
         </div>
@@ -132,31 +132,31 @@ export default function NewProgramPage() {
         </div>
 
         <div>
-          <label className={LABEL}>Highlights <span className="text-xs text-slate-400 font-normal">(What You&apos;ll Get bullet points)</span></label>
+          <label className={LABEL}>Highlights <span className="text-xs text-zinc-400 font-normal">(What You&apos;ll Get bullet points)</span></label>
           <div className="space-y-2">
             {form.highlights.map((h, i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className="flex-1 px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg text-slate-700">{h}</span>
-                <button type="button" onClick={() => removeHighlight(i)} className="px-2 py-1 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">Remove</button>
+                <span className="flex-1 px-3 py-2 text-sm bg-zinc-50 border border-zinc-200 rounded-md text-zinc-700">{h}</span>
+                <button type="button" onClick={() => removeHighlight(i)} className="px-2 py-1 text-xs text-red-500 border border-red-200 rounded-md hover:bg-red-50 transition-colors">Remove</button>
               </div>
             ))}
             <div className="flex gap-2">
               <input value={highlightInput} onChange={(e) => setHighlightInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addHighlight(); } }} placeholder="Add a highlight..." className={`flex-1 ${INPUT}`} />
-              <button type="button" onClick={addHighlight} className="px-3 py-2 text-sm text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors">+ Add</button>
+              <button type="button" onClick={addHighlight} className="px-3 py-2 text-sm text-sxc-navy border border-zinc-200 rounded-md hover:bg-zinc-50 transition-colors">+ Add</button>
             </div>
           </div>
         </div>
 
         <div>
-          <label className={LABEL}>Gallery Images <span className="text-xs text-slate-400 font-normal">(optional)</span></label>
+          <label className={LABEL}>Gallery Images <span className="text-xs text-zinc-400 font-normal">(optional)</span></label>
           <div className="space-y-3">
             {form.images.map((url, i) => (
               <div key={i} className="flex items-center gap-2">
                 <ImageUpload value={url} onChange={(newUrl) => { const updated = [...form.images]; updated[i] = newUrl; set("images", updated); }} folder="programs" />
-                <button type="button" onClick={() => set("images", form.images.filter((_, j) => j !== i))} className="shrink-0 px-2 py-1 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">Remove</button>
+                <button type="button" onClick={() => set("images", form.images.filter((_, j) => j !== i))} className="shrink-0 px-2 py-1 text-xs text-red-500 border border-red-200 rounded-md hover:bg-red-50 transition-colors">Remove</button>
               </div>
             ))}
-            <button type="button" onClick={() => set("images", [...form.images, ""])} className="px-3 py-2 text-sm text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors">+ Add Image</button>
+            <button type="button" onClick={() => set("images", [...form.images, ""])} className="px-3 py-2 text-sm text-sxc-navy border border-zinc-200 rounded-md hover:bg-zinc-50 transition-colors">+ Add Image</button>
           </div>
         </div>
 
@@ -164,25 +164,26 @@ export default function NewProgramPage() {
           <div>
             <label className={LABEL}>Sort Order</label>
             <input type="number" value={form.sort_order} onChange={(e) => set("sort_order", parseInt(e.target.value) || 0)} className={INPUT} />
-            <p className="text-xs text-slate-400 mt-1">Lower number = shown first</p>
+            <p className="text-xs text-zinc-400 mt-1">Lower number = shown first</p>
           </div>
           <div className="flex items-end pb-2">
             <label className="flex items-center gap-3 cursor-pointer">
-              <input type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} className="w-4 h-4 rounded text-indigo-600" />
-              <span className="text-sm font-medium text-slate-700">Publish immediately</span>
+              <input type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} className="w-4 h-4 rounded text-sxc-navy" />
+              <span className="text-sm font-medium text-zinc-700">Publish immediately</span>
             </label>
           </div>
         </div>
 
-        {error && <div className="px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">{error}</div>}
+        {error && <div className="px-3 py-2.5 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">{error}</div>}
 
         <div className="flex gap-3 pt-2">
-          <button type="submit" disabled={loading} className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60">
+          <button type="submit" disabled={loading} className="px-5 py-2.5 bg-sxc-navy text-white text-sm font-medium rounded-md hover:bg-sxc-blue transition-colors disabled:opacity-60">
             {loading ? "Saving..." : "Save Program"}
           </button>
-          <Link href="/programs" className="px-5 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">Cancel</Link>
+          <Link href="/programs" className="px-5 py-2.5 text-sm font-medium text-zinc-600 bg-zinc-100 rounded-md hover:bg-zinc-200 transition-colors">Cancel</Link>
         </div>
       </form>
     </div>
   );
 }
+

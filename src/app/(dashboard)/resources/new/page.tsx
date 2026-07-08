@@ -1,0 +1,169 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { api, ApiError } from "@/lib/api-client";
+import ImageUpload from "@/components/ImageUpload";
+import { generateSlug } from "@/lib/utils";
+
+const INPUT =
+  "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500";
+const LABEL = "block text-sm font-medium text-slate-700 mb-1.5";
+
+export default function NewResourcePage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [slugTouched, setSlugTouched] = useState(false);
+  const [highlightInput, setHighlightInput] = useState("");
+
+  const [form, setForm] = useState({
+    badge: "",
+    slug: "",
+    category: "",
+    title: "",
+    month: "",
+    audience: "",
+    cover: "",
+    hero: "",
+    excerpt: "",
+    content: "",
+    highlights: [] as string[],
+    is_published: true,
+    sort_order: 0,
+  });
+
+  useEffect(() => {
+    if (!slugTouched) {
+      setForm((prev) => ({ ...prev, slug: generateSlug(prev.badge) }));
+    }
+  }, [form.badge, slugTouched]);
+
+  function set(key: string, value: unknown) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function addHighlight() {
+    const trimmed = highlightInput.trim();
+    if (!trimmed) return;
+    set("highlights", [...form.highlights, trimmed]);
+    setHighlightInput("");
+  }
+
+  async function handleSubmit(e: { preventDefault(): void }) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      await api.post("/resources", form);
+      router.push("/resources");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Failed to save");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="max-w-2xl space-y-4">
+      <div className="flex items-center gap-3">
+        <Link href="/resources" className="text-slate-400 hover:text-slate-600 transition-colors">← Back</Link>
+        <h1 className="text-xl font-bold text-slate-900">Add Resource</h1>
+      </div>
+
+      <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-slate-200 p-6 space-y-5">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={LABEL}>Badge Name <span className="text-red-500">*</span></label>
+            <input required value={form.badge} onChange={(e) => set("badge", e.target.value)} placeholder="e.g. Blog / Insights" className={INPUT} />
+          </div>
+          <div>
+            <label className={LABEL}>Slug <span className="text-xs text-slate-400 font-normal">(auto)</span></label>
+            <input required value={form.slug} onChange={(e) => { setSlugTouched(true); set("slug", e.target.value); }} placeholder="blog-insights" className={INPUT} />
+          </div>
+        </div>
+
+        <div>
+          <label className={LABEL}>Title <span className="text-red-500">*</span></label>
+          <input required value={form.title} onChange={(e) => set("title", e.target.value)} placeholder="Full resource title" className={INPUT} />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={LABEL}>Category <span className="text-red-500">*</span></label>
+            <input required value={form.category} onChange={(e) => set("category", e.target.value)} placeholder="e.g. Knowledge" className={INPUT} />
+          </div>
+          <div>
+            <label className={LABEL}>Update Schedule <span className="text-red-500">*</span></label>
+            <input required value={form.month} onChange={(e) => set("month", e.target.value)} placeholder="e.g. Weekly Update" className={INPUT} />
+          </div>
+        </div>
+
+        <div>
+          <label className={LABEL}>Audience <span className="text-red-500">*</span></label>
+          <input required value={form.audience} onChange={(e) => set("audience", e.target.value)} placeholder="e.g. Aspiring Professionals" className={INPUT} />
+        </div>
+
+        <div>
+          <label className={LABEL}>Cover Image <span className="text-red-500">*</span></label>
+          <ImageUpload value={form.cover} onChange={(url) => set("cover", url)} folder="resources" />
+        </div>
+
+        <div>
+          <label className={LABEL}>Hero Image <span className="text-red-500">*</span></label>
+          <ImageUpload value={form.hero} onChange={(url) => set("hero", url)} folder="resources" />
+        </div>
+
+        <div>
+          <label className={LABEL}>Excerpt <span className="text-red-500">*</span></label>
+          <textarea required rows={3} value={form.excerpt} onChange={(e) => set("excerpt", e.target.value)} placeholder="Short summary..." className={`${INPUT} resize-y`} />
+        </div>
+
+        <div>
+          <label className={LABEL}>Content <span className="text-red-500">*</span></label>
+          <textarea required rows={10} value={form.content} onChange={(e) => set("content", e.target.value)} placeholder="Full content. Separate paragraphs with a blank line." className={`${INPUT} resize-y`} />
+        </div>
+
+        <div>
+          <label className={LABEL}>Highlights <span className="text-xs text-slate-400 font-normal">(bullet points in sidebar)</span></label>
+          <div className="space-y-2">
+            {form.highlights.map((h, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="flex-1 px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg text-slate-700">{h}</span>
+                <button type="button" onClick={() => set("highlights", form.highlights.filter((_, j) => j !== i))} className="px-2 py-1 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">Remove</button>
+              </div>
+            ))}
+            <div className="flex gap-2">
+              <input value={highlightInput} onChange={(e) => setHighlightInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addHighlight(); } }} placeholder="Add a highlight..." className={`flex-1 ${INPUT}`} />
+              <button type="button" onClick={addHighlight} className="px-3 py-2 text-sm text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors">+ Add</button>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className={LABEL}>Sort Order</label>
+            <input type="number" value={form.sort_order} onChange={(e) => set("sort_order", parseInt(e.target.value) || 0)} className={INPUT} />
+            <p className="text-xs text-slate-400 mt-1">Lower number = shown first</p>
+          </div>
+          <div className="flex items-end pb-2">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} className="w-4 h-4 rounded text-indigo-600" />
+              <span className="text-sm font-medium text-slate-700">Publish immediately</span>
+            </label>
+          </div>
+        </div>
+
+        {error && <div className="px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">{error}</div>}
+
+        <div className="flex gap-3 pt-2">
+          <button type="submit" disabled={loading} className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60">
+            {loading ? "Saving..." : "Save Resource"}
+          </button>
+          <Link href="/resources" className="px-5 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">Cancel</Link>
+        </div>
+      </form>
+    </div>
+  );
+}

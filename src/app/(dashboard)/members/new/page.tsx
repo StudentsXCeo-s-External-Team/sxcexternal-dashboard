@@ -17,6 +17,7 @@ export default function NewMemberPage() {
 
   const [form, setForm] = useState({
     name: "",
+    role_type: "associate" as "executive" | "management" | "associate",
     position: "",
     department: "",
     photo_url: "",
@@ -64,6 +65,16 @@ export default function NewMemberPage() {
         <div>
           <label className={LABEL}>Name <span className="text-red-500">*</span></label>
           <input required value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="Full name" className={INPUT} />
+        </div>
+
+        <div>
+          <label className={LABEL}>Role Type <span className="text-red-500">*</span></label>
+          <select required value={form.role_type} onChange={(e) => set("role_type", e.target.value)} className={INPUT}>
+            <option value="executive">Executive (Board of Executive)</option>
+            <option value="management">Management (Board of Management)</option>
+            <option value="associate">Associate</option>
+          </select>
+          <p className="text-xs text-slate-400 mt-1">Determines which section they appear in on the Our People page</p>
         </div>
 
         <div>

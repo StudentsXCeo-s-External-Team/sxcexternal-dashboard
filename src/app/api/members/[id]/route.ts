@@ -6,6 +6,7 @@ import { ok, badRequest, notFound, serverError } from "@/lib/response";
 
 const updateSchema = z.object({
   name: z.string().min(1).optional(),
+  role_type: z.enum(["executive", "management", "associate"]).optional(),
   position: z.string().optional().nullable(),
   department: z.string().optional().nullable(),
   photo_url: z.string().url("Invalid photo URL").optional().nullable(),

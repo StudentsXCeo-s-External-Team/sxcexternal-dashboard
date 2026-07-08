@@ -65,6 +65,7 @@ export default function MembersPage() {
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Member</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Role Type</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Position</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Period</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Order</th>
@@ -86,6 +87,11 @@ export default function MembersPage() {
                       )}
                       <span className="font-medium text-slate-800">{member.name}</span>
                     </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${member.role_type === "executive" ? "bg-purple-100 text-purple-700" : member.role_type === "management" ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-500"}`}>
+                      {member.role_type}
+                    </span>
                   </td>
                   <td className="px-4 py-3 text-slate-500">{member.position ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-500">{member.period ?? "—"}</td>

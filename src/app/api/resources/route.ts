@@ -6,15 +6,20 @@ import { getServerAdmin } from "@/lib/server-auth";
 import { ok, created, badRequest, conflict, serverError } from "@/lib/response";
 import { generateSlug, parsePagination } from "@/lib/utils";
 
-const createNewsSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  content: z.string().min(1, "Content is required"),
-  image_url: z.string().url("Invalid image URL").optional().nullable(),
-  author: z.string().optional().nullable(),
+const createSchema = z.object({
   slug: z.string().optional(),
-  images: z.array(z.string().url()).optional().default([]),
+  badge: z.string().min(1, "Badge is required"),
+  category: z.string().min(1, "Category is required"),
+  title: z.string().min(1, "Title is required"),
+  month: z.string().min(1, "Month is required"),
+  audience: z.string().min(1, "Audience is required"),
+  cover: z.string().url("Invalid cover URL"),
+  hero: z.string().url("Invalid hero URL"),
+  excerpt: z.string().min(1, "Excerpt is required"),
+  content: z.string().min(1, "Content is required"),
+  highlights: z.array(z.string()).optional().default([]),
   is_published: z.boolean().default(true),
-  published_at: z.string().datetime().optional().nullable(),
+  sort_order: z.number().int().default(0),
 });
 
 export async function GET(request: NextRequest) {
@@ -24,24 +29,18 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search") ?? "";
     const slug = searchParams.get("slug") ?? "";
 
-    // Authenticated admins see all news; public only sees published
     const admin = await getServerAdmin();
 
     let query = supabase
-      .from("news")
+      .from("resources")
       .select("*", { count: "exact" })
+      .order("sort_order", { ascending: true })
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
 
-    if (!admin) {
-      query = query.eq("is_published", true);
-    }
-
-    if (slug) {
-      query = query.eq("slug", slug);
-    } else if (search) {
-      query = query.ilike("title", `%${search}%`);
-    }
+    if (!admin) query = query.eq("is_published", true);
+    if (slug) query = query.eq("slug", slug);
+    else if (search) query = query.ilike("title", `%${search}%`);
 
     const { data, error, count } = await query;
     if (error) return serverError(error.message);
@@ -60,30 +59,24 @@ export async function GET(request: NextRequest) {
 export const POST = withAuth(async (request) => {
   try {
     const body = await request.json();
-    const result = createNewsSchema.safeParse(body);
-    if (!result.success) {
-      return badRequest(result.error.errors[0].message);
-    }
+    const result = createSchema.safeParse(body);
+    if (!result.success) return badRequest(result.error.errors[0].message);
 
     const payload = {
       ...result.data,
-      slug: result.data.slug ?? generateSlug(result.data.title),
-      published_at:
-        result.data.published_at ??
-        (result.data.is_published ? new Date().toISOString() : null),
+      slug: result.data.slug ?? generateSlug(result.data.badge),
     };
 
     const { data, error } = await supabase
-      .from("news")
+      .from("resources")
       .insert(payload)
       .select()
       .single();
 
     if (error) {
-      if (error.code === "23505") return conflict("Slug already exists. Provide a custom slug.");
+      if (error.code === "23505") return conflict("Slug already exists.");
       return serverError(error.message);
     }
-
     return created(data);
   } catch {
     return serverError();

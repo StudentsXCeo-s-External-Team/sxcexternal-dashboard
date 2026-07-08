@@ -4,15 +4,21 @@ import { supabase } from "@/lib/supabase";
 import { withAuth } from "@/lib/withAuth";
 import { ok, badRequest, conflict, notFound, serverError } from "@/lib/response";
 
-const updateNewsSchema = z.object({
-  title: z.string().min(1).optional(),
-  content: z.string().min(1).optional(),
-  image_url: z.string().url().optional().nullable(),
-  author: z.string().optional().nullable(),
+const updateProgramSchema = z.object({
   slug: z.string().optional(),
+  badge: z.string().min(1).optional(),
+  category: z.string().min(1).optional(),
+  title: z.string().min(1).optional(),
+  month: z.string().optional(),
+  audience: z.string().optional(),
+  cover: z.string().url().optional(),
+  hero: z.string().url().optional(),
   images: z.array(z.string().url()).optional(),
+  excerpt: z.string().optional(),
+  content: z.string().optional(),
+  highlights: z.array(z.string()).optional(),
   is_published: z.boolean().optional(),
-  published_at: z.string().datetime().optional().nullable(),
+  sort_order: z.number().int().optional(),
 });
 
 type Ctx = { params: Promise<{ id: string }> };
@@ -21,12 +27,12 @@ export async function GET(_request: NextRequest, { params }: Ctx) {
   try {
     const { id } = await params;
     const { data, error } = await supabase
-      .from("news")
+      .from("programs")
       .select("*")
       .eq("id", id)
       .single();
 
-    if (error || !data) return notFound("News not found");
+    if (error || !data) return notFound("Program not found");
     return ok(data);
   } catch {
     return serverError();
@@ -37,32 +43,14 @@ export const PUT = withAuth(async (request, { params }) => {
   try {
     const { id } = await params;
     const body = await request.json();
-    const result = updateNewsSchema.safeParse(body);
+    const result = updateProgramSchema.safeParse(body);
     if (!result.success) {
       return badRequest(result.error.errors[0].message);
     }
 
-    const updates: Record<string, unknown> = {
-      ...result.data,
-      updated_at: new Date().toISOString(),
-    };
-
-    // Auto-set published_at when publishing for the first time
-    if (result.data.is_published && !result.data.published_at) {
-      const { data: existing } = await supabase
-        .from("news")
-        .select("published_at, is_published")
-        .eq("id", id)
-        .single();
-
-      if (existing && !existing.is_published && !existing.published_at) {
-        updates.published_at = new Date().toISOString();
-      }
-    }
-
     const { data, error } = await supabase
-      .from("news")
-      .update(updates)
+      .from("programs")
+      .update({ ...result.data, updated_at: new Date().toISOString() })
       .eq("id", id)
       .select()
       .single();
@@ -71,7 +59,7 @@ export const PUT = withAuth(async (request, { params }) => {
       if (error.code === "23505") return conflict("Slug already exists.");
       return serverError(error.message);
     }
-    if (!data) return notFound("News not found");
+    if (!data) return notFound("Program not found");
     return ok(data);
   } catch {
     return serverError();
@@ -81,9 +69,9 @@ export const PUT = withAuth(async (request, { params }) => {
 export const DELETE = withAuth(async (_request, { params }) => {
   try {
     const { id } = await params;
-    const { error } = await supabase.from("news").delete().eq("id", id);
+    const { error } = await supabase.from("programs").delete().eq("id", id);
     if (error) return serverError(error.message);
-    return ok({ message: "News deleted successfully" });
+    return ok({ message: "Program deleted successfully" });
   } catch {
     return serverError();
   }

@@ -10,16 +10,17 @@ const INPUT =
   "w-full px-3 py-2.5 text-sm border border-zinc-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sxc-blue";
 const LABEL = "block text-sm font-medium text-zinc-700 mb-1.5";
 
-export default function NewPhotoPage() {
+export default function NewPartnerPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [form, setForm] = useState({
-    title: "",
-    description: "",
-    image_url: "",
-    category: "",
+    name: "",
+    logo_url: "",
+    partner_type: "corporate" as "corporate" | "media" | "community",
+    website_url: "",
+    sort_order: 0,
     is_published: true,
   });
 
@@ -29,18 +30,14 @@ export default function NewPhotoPage() {
 
   async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault();
-    if (!form.image_url) { setError("Please upload an image first"); return; }
     setError("");
     setLoading(true);
-
     try {
-      await api.post("/gallery", {
+      await api.post("/partners", {
         ...form,
-        title: form.title || null,
-        description: form.description || null,
-        category: form.category || null,
+        website_url: form.website_url || null,
       });
-      router.push("/gallery");
+      router.push("/partners");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Failed to save");
     } finally {
@@ -51,29 +48,39 @@ export default function NewPhotoPage() {
   return (
     <div className="max-w-2xl space-y-4">
       <div className="flex items-center gap-3">
-        <Link href="/gallery" className="text-zinc-400 hover:text-zinc-600 transition-colors">← Back</Link>
-        <h1 className="text-xl font-bold text-zinc-900">Add Photo</h1>
+        <Link href="/partners" className="text-zinc-400 hover:text-zinc-600 transition-colors">← Back</Link>
+        <h1 className="text-xl font-bold text-zinc-900">Add Partner</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-md border border-zinc-200 p-6 space-y-5">
         <div>
-          <label className={LABEL}>Photo <span className="text-red-500">*</span></label>
-          <ImageUpload value={form.image_url} onChange={(url) => set("image_url", url)} folder="gallery" />
+          <label className={LABEL}>Name <span className="text-red-500">*</span></label>
+          <input required value={form.name} onChange={(e) => set("name", e.target.value)} placeholder="e.g. Mondelez" className={INPUT} />
         </div>
 
         <div>
-          <label className={LABEL}>Title</label>
-          <input value={form.title} onChange={(e) => set("title", e.target.value)} placeholder="Photo title (optional)" className={INPUT} />
+          <label className={LABEL}>Type <span className="text-red-500">*</span></label>
+          <select required value={form.partner_type} onChange={(e) => set("partner_type", e.target.value)} className={INPUT}>
+            <option value="corporate">Corporate Partner</option>
+            <option value="media">Media Partner</option>
+            <option value="community">Community Partner</option>
+          </select>
         </div>
 
         <div>
-          <label className={LABEL}>Description</label>
-          <textarea rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Photo description..." className={`${INPUT} resize-none`} />
+          <label className={LABEL}>Logo <span className="text-red-500">*</span></label>
+          <ImageUpload value={form.logo_url} onChange={(url) => set("logo_url", url)} folder="partners" />
         </div>
 
         <div>
-          <label className={LABEL}>Category</label>
-          <input value={form.category} onChange={(e) => set("category", e.target.value)} placeholder="e.g. Events, Members, Campus" className={INPUT} />
+          <label className={LABEL}>Website URL</label>
+          <input type="url" value={form.website_url} onChange={(e) => set("website_url", e.target.value)} placeholder="https://..." className={INPUT} />
+        </div>
+
+        <div>
+          <label className={LABEL}>Sort Order</label>
+          <input type="number" value={form.sort_order} onChange={(e) => set("sort_order", parseInt(e.target.value) || 0)} className={INPUT} />
+          <p className="text-xs text-zinc-400 mt-1">Lower number = shown first</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -85,9 +92,9 @@ export default function NewPhotoPage() {
 
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={loading} className="px-5 py-2.5 bg-sxc-navy text-white text-sm font-medium rounded-md hover:bg-sxc-blue transition-colors disabled:opacity-60">
-            {loading ? "Saving..." : "Save Photo"}
+            {loading ? "Saving..." : "Save Partner"}
           </button>
-          <Link href="/gallery" className="px-5 py-2.5 text-sm font-medium text-zinc-600 bg-zinc-100 rounded-md hover:bg-zinc-200 transition-colors">Cancel</Link>
+          <Link href="/partners" className="px-5 py-2.5 text-sm font-medium text-zinc-600 bg-zinc-100 rounded-md hover:bg-zinc-200 transition-colors">Cancel</Link>
         </div>
       </form>
     </div>

@@ -11,6 +11,7 @@ const updateEventSchema = z.object({
   start_date: z.string().datetime().optional(),
   end_date: z.string().datetime().optional().nullable(),
   location: z.string().optional().nullable(),
+  registration_url: z.string().url().optional().nullable(),
   is_published: z.boolean().optional(),
 });
 
@@ -25,7 +26,8 @@ export async function GET(_request: NextRequest, { params }: Ctx) {
       .eq("id", id)
       .single();
 
-    if (error || !data) return notFound("Event not found");
+    if (error) return error.code === "PGRST116" ? notFound("Event not found") : serverError(error.message);
+    if (!data) return notFound("Event not found");
     return ok(data);
   } catch {
     return serverError();
@@ -48,7 +50,8 @@ export const PUT = withAuth(async (request, { params }) => {
       .select()
       .single();
 
-    if (error || !data) return notFound("Event not found");
+    if (error) return error.code === "PGRST116" ? notFound("Event not found") : serverError(error.message);
+    if (!data) return notFound("Event not found");
     return ok(data);
   } catch {
     return serverError();

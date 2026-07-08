@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -9,8 +9,8 @@ import ImageUpload from "@/components/ImageUpload";
 import DeleteModal from "@/components/DeleteModal";
 
 const INPUT =
-  "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500";
-const LABEL = "block text-sm font-medium text-slate-700 mb-1.5";
+  "w-full px-3 py-2.5 text-sm border border-zinc-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sxc-blue";
+const LABEL = "block text-sm font-medium text-zinc-700 mb-1.5";
 
 export default function EditNewsPage() {
   const router = useRouter();
@@ -28,6 +28,7 @@ export default function EditNewsPage() {
     image_url: "",
     author: "",
     slug: "",
+    images: [] as string[],
     is_published: true,
   });
 
@@ -41,6 +42,7 @@ export default function EditNewsPage() {
           image_url: data.image_url ?? "",
           author: data.author ?? "",
           slug: data.slug,
+          images: data.images ?? [],
           is_published: data.is_published,
         });
       })
@@ -62,6 +64,7 @@ export default function EditNewsPage() {
         ...form,
         image_url: form.image_url || null,
         author: form.author || null,
+        images: form.images,
       });
       router.push("/news");
     } catch (err) {
@@ -83,22 +86,22 @@ export default function EditNewsPage() {
   }
 
   if (fetching) {
-    return <div className="flex items-center justify-center py-20 text-slate-400 text-sm">Loading...</div>;
+    return <div className="flex items-center justify-center py-20 text-zinc-400 text-sm">Loading...</div>;
   }
 
   return (
     <div className="max-w-2xl space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/news" className="text-slate-400 hover:text-slate-600 transition-colors">← Back</Link>
-          <h1 className="text-xl font-bold text-slate-900">Edit News</h1>
+          <Link href="/news" className="text-zinc-400 hover:text-zinc-600 transition-colors">← Back</Link>
+          <h1 className="text-xl font-bold text-zinc-900">Edit News</h1>
         </div>
-        <button onClick={() => setShowDelete(true)} className="px-3 py-1.5 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+        <button onClick={() => setShowDelete(true)} className="px-3 py-1.5 text-sm text-red-500 border border-red-200 rounded-md hover:bg-red-50 transition-colors">
           Delete
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-slate-200 p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="bg-white rounded-md border border-zinc-200 p-6 space-y-5">
         <div>
           <label className={LABEL}>Title <span className="text-red-500">*</span></label>
           <input required value={form.title} onChange={(e) => set("title", e.target.value)} className={INPUT} />
@@ -120,22 +123,58 @@ export default function EditNewsPage() {
         </div>
 
         <div>
+          <label className={LABEL}>
+            Gallery Images
+            <span className="text-xs text-zinc-400 font-normal ml-2">(shown below article content)</span>
+          </label>
+          <div className="space-y-3">
+            {form.images.map((url, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <ImageUpload
+                  value={url}
+                  onChange={(newUrl) => {
+                    const updated = [...form.images];
+                    updated[i] = newUrl;
+                    set("images", updated);
+                  }}
+                  folder="news"
+                />
+                <button
+                  type="button"
+                  onClick={() => set("images", form.images.filter((_, j) => j !== i))}
+                  className="shrink-0 px-2 py-1 text-xs text-red-500 border border-red-200 rounded-md hover:bg-red-50 transition-colors"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => set("images", [...form.images, ""])}
+              className="px-3 py-2 text-sm text-sxc-navy border border-zinc-200 rounded-md hover:bg-zinc-50 transition-colors"
+            >
+              + Add Image
+            </button>
+          </div>
+        </div>
+
+        <div>
           <label className={LABEL}>Author</label>
           <input value={form.author} onChange={(e) => set("author", e.target.value)} className={INPUT} />
         </div>
 
         <div className="flex items-center gap-3">
-          <input id="published" type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} className="w-4 h-4 rounded text-indigo-600" />
-          <label htmlFor="published" className="text-sm font-medium text-slate-700">Published</label>
+          <input id="published" type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} className="w-4 h-4 rounded text-sxc-navy" />
+          <label htmlFor="published" className="text-sm font-medium text-zinc-700">Published</label>
         </div>
 
-        {error && <div className="px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">{error}</div>}
+        {error && <div className="px-3 py-2.5 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">{error}</div>}
 
         <div className="flex gap-3 pt-2">
-          <button type="submit" disabled={loading} className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60">
+          <button type="submit" disabled={loading} className="px-5 py-2.5 bg-sxc-navy text-white text-sm font-medium rounded-md hover:bg-sxc-blue transition-colors disabled:opacity-60">
             {loading ? "Saving..." : "Save Changes"}
           </button>
-          <Link href="/news" className="px-5 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">Cancel</Link>
+          <Link href="/news" className="px-5 py-2.5 text-sm font-medium text-zinc-600 bg-zinc-100 rounded-md hover:bg-zinc-200 transition-colors">Cancel</Link>
         </div>
       </form>
 

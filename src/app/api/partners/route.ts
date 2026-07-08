@@ -7,32 +7,30 @@ import { parsePagination } from "@/lib/utils";
 
 const createSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  role_type: z.enum(["executive", "management", "associate"]).default("associate"),
-  position: z.string().optional().nullable(),
-  department: z.string().optional().nullable(),
-  photo_url: z.string().url("Invalid photo URL").optional().nullable(),
-  period: z.string().optional().nullable(),
-  bio: z.string().optional().nullable(),
-  social_url: z.string().url("Invalid social URL").optional().nullable(),
+  logo_url: z.string().url("Invalid logo URL"),
+  partner_type: z.enum(["corporate", "media", "community"]),
+  website_url: z.string().url("Invalid website URL").optional().nullable(),
   sort_order: z.number().int().default(0),
+  is_published: z.boolean().default(true),
 });
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const { page, limit, offset } = parsePagination(searchParams);
-    const period = searchParams.get("period") ?? "";
-    const roleType = searchParams.get("role_type") ?? "";
+    const partnerType = searchParams.get("partner_type") ?? "";
+    const search = searchParams.get("search") ?? "";
 
     let query = supabase
-      .from("members")
+      .from("partners")
       .select("*", { count: "exact" })
+      .eq("is_published", true)
       .order("sort_order", { ascending: true })
       .order("name", { ascending: true })
       .range(offset, offset + limit - 1);
 
-    if (period) query = query.eq("period", period);
-    if (roleType) query = query.eq("role_type", roleType);
+    if (partnerType) query = query.eq("partner_type", partnerType);
+    if (search) query = query.ilike("name", `%${search}%`);
 
     const { data, error, count } = await query;
     if (error) return serverError(error.message);
@@ -55,7 +53,7 @@ export const POST = withAuth(async (request) => {
     if (!result.success) return badRequest(result.error.errors[0].message);
 
     const { data, error } = await supabase
-      .from("members")
+      .from("partners")
       .insert(result.data)
       .select()
       .single();

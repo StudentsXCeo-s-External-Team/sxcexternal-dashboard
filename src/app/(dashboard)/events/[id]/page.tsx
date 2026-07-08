@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -9,8 +9,8 @@ import ImageUpload from "@/components/ImageUpload";
 import DeleteModal from "@/components/DeleteModal";
 
 const INPUT =
-  "w-full px-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500";
-const LABEL = "block text-sm font-medium text-slate-700 mb-1.5";
+  "w-full px-3 py-2.5 text-sm border border-zinc-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sxc-blue";
+const LABEL = "block text-sm font-medium text-zinc-700 mb-1.5";
 
 function toLocal(iso?: string | null) {
   if (!iso) return "";
@@ -34,6 +34,7 @@ export default function EditEventPage() {
     start_date: "",
     end_date: "",
     location: "",
+    registration_url: "",
     is_published: true,
   });
 
@@ -48,10 +49,11 @@ export default function EditEventPage() {
           start_date: toLocal(data.start_date),
           end_date: toLocal(data.end_date),
           location: data.location ?? "",
+          registration_url: data.registration_url ?? "",
           is_published: data.is_published,
         });
       })
-      .catch(() => setError("Event not found"))
+      .catch((err) => setError(err instanceof ApiError ? err.message : "Failed to load event"))
       .finally(() => setFetching(false));
   }, [id]);
 
@@ -71,6 +73,7 @@ export default function EditEventPage() {
         image_url: form.image_url || null,
         end_date: form.end_date ? new Date(form.end_date).toISOString() : null,
         location: form.location || null,
+        registration_url: form.registration_url || null,
         start_date: new Date(form.start_date).toISOString(),
       });
       router.push("/events");
@@ -93,22 +96,22 @@ export default function EditEventPage() {
   }
 
   if (fetching) {
-    return <div className="flex items-center justify-center py-20 text-slate-400 text-sm">Loading...</div>;
+    return <div className="flex items-center justify-center py-20 text-zinc-400 text-sm">Loading...</div>;
   }
 
   return (
     <div className="max-w-2xl space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/events" className="text-slate-400 hover:text-slate-600 transition-colors">← Back</Link>
-          <h1 className="text-xl font-bold text-slate-900">Edit Event</h1>
+          <Link href="/events" className="text-zinc-400 hover:text-zinc-600 transition-colors">← Back</Link>
+          <h1 className="text-xl font-bold text-zinc-900">Edit Event</h1>
         </div>
-        <button onClick={() => setShowDelete(true)} className="px-3 py-1.5 text-sm text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+        <button onClick={() => setShowDelete(true)} className="px-3 py-1.5 text-sm text-red-500 border border-red-200 rounded-md hover:bg-red-50 transition-colors">
           Delete
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-slate-200 p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="bg-white rounded-md border border-zinc-200 p-6 space-y-5">
         <div>
           <label className={LABEL}>Title <span className="text-red-500">*</span></label>
           <input required value={form.title} onChange={(e) => set("title", e.target.value)} className={INPUT} />
@@ -140,18 +143,24 @@ export default function EditEventPage() {
           <input value={form.location} onChange={(e) => set("location", e.target.value)} className={INPUT} />
         </div>
 
-        <div className="flex items-center gap-3">
-          <input id="published" type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} className="w-4 h-4 rounded text-indigo-600" />
-          <label htmlFor="published" className="text-sm font-medium text-slate-700">Published</label>
+        <div>
+          <label className={LABEL}>Registration URL</label>
+          <input type="url" value={form.registration_url} onChange={(e) => set("registration_url", e.target.value)} placeholder="https://..." className={INPUT} />
+          <p className="text-xs text-zinc-400 mt-1">Link for attendees to register (optional)</p>
         </div>
 
-        {error && <div className="px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">{error}</div>}
+        <div className="flex items-center gap-3">
+          <input id="published" type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} className="w-4 h-4 rounded text-sxc-navy" />
+          <label htmlFor="published" className="text-sm font-medium text-zinc-700">Published</label>
+        </div>
+
+        {error && <div className="px-3 py-2.5 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">{error}</div>}
 
         <div className="flex gap-3 pt-2">
-          <button type="submit" disabled={loading} className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-60">
+          <button type="submit" disabled={loading} className="px-5 py-2.5 bg-sxc-navy text-white text-sm font-medium rounded-md hover:bg-sxc-blue transition-colors disabled:opacity-60">
             {loading ? "Saving..." : "Save Changes"}
           </button>
-          <Link href="/events" className="px-5 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">
+          <Link href="/events" className="px-5 py-2.5 text-sm font-medium text-zinc-600 bg-zinc-100 rounded-md hover:bg-zinc-200 transition-colors">
             Cancel
           </Link>
         </div>

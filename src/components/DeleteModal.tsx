@@ -18,8 +18,8 @@ export default function DeleteModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-md shadow-xl p-6 w-full max-w-sm mx-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="bg-white dark:bg-zinc-900 rounded-md shadow-xl p-6 w-full max-w-sm mx-4">
         <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mx-auto mb-4">
           <svg
             className="w-6 h-6 text-red-600"
@@ -48,7 +48,7 @@ export default function DeleteModal({
           <button
             onClick={onCancel}
             disabled={loading}
-            className="flex-1 px-4 py-2 text-sm font-medium text-zinc-600 bg-zinc-100 rounded-md hover:bg-zinc-200 transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2 text-sm font-medium text-zinc-600 bg-zinc-100 dark:bg-zinc-800 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>

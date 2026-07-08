@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { createBrowserClient } from "@supabase/ssr";
@@ -38,7 +38,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex bg-white">
+    <div className="min-h-screen flex bg-white dark:bg-zinc-950">
 
       {/* Left — brand panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-sxc-navy flex-col justify-between p-12 relative overflow-hidden">
@@ -80,7 +80,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right — login form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-12">
+      <div className="flex-1 flex items-center justify-center px-6 py-12 dark:bg-zinc-950">
         <div className="w-full max-w-sm">
 
           {/* Mobile logo */}
@@ -92,15 +92,15 @@ export default function LoginPage() {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-3xl font-black text-sxc-navy uppercase tracking-tight leading-none mb-2">
+            <h2 className="text-3xl font-black text-sxc-navy dark:text-white uppercase tracking-tight leading-none mb-2">
               Admin Login
             </h2>
-            <p className="text-zinc-500 text-sm">
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm">
               Masuk dengan akun Google yang terdaftar sebagai admin.
             </p>
           </div>
 
-          <div className="h-px w-full bg-zinc-100 mb-8" />
+          <div className="h-px w-full bg-zinc-100 dark:bg-zinc-800 mb-8" />
 
           {(error || errorParam) && (
             <div className="mb-6 px-4 py-3 border-l-2 border-red-500 bg-red-50">
@@ -115,7 +115,7 @@ export default function LoginPage() {
           <button
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 py-3 px-5 border border-zinc-200 text-sm font-semibold text-zinc-800 bg-white hover:bg-zinc-50 hover:border-sxc-blue transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center gap-3 py-3 px-5 border border-zinc-200 dark:border-zinc-700 text-sm font-semibold text-zinc-800 dark:text-zinc-100 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:border-sxc-blue transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ borderRadius: "4px" }}
           >
             <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
@@ -127,7 +127,7 @@ export default function LoginPage() {
             {loading ? "Mengarahkan..." : "Masuk dengan Google"}
           </button>
 
-          <p className="mt-6 text-center text-xs text-zinc-400">
+          <p className="mt-6 text-center text-xs text-zinc-400 dark:text-zinc-500">
             Hanya email admin yang terdaftar yang dapat mengakses halaman ini.
           </p>
         </div>

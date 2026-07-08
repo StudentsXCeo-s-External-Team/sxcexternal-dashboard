@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
 async function getStats() {
@@ -147,7 +147,7 @@ export default async function DashboardPage() {
           <Link
             key={card.href}
             href={card.href}
-            className="bg-white border border-zinc-100 p-4 flex items-center gap-3 hover:border-zinc-200 hover:shadow-sm transition-all group"
+            className="bg-white dark:bg-zinc-900 dark:bg-zinc-900 border border-zinc-100 p-4 flex items-center gap-3 hover:border-zinc-200 dark:border-zinc-700 hover:shadow-sm transition-all group"
             style={{ borderRadius: "4px" }}
           >
             <div className="p-2 shrink-0" style={{ backgroundColor: `${card.accent}15`, borderRadius: "4px" }}>
@@ -162,7 +162,7 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <div className="bg-white border border-zinc-100 p-5" style={{ borderRadius: "4px" }}>
+      <div className="bg-white dark:bg-zinc-900 dark:bg-zinc-900 border border-zinc-100 p-5" style={{ borderRadius: "4px" }}>
         <h2 className="text-xs font-bold text-zinc-400 tracking-[0.15em] uppercase mb-3">Quick Actions</h2>
         <div className="flex flex-wrap gap-2">
           {quickActions.map((a) => (
